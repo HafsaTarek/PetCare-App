@@ -8,7 +8,7 @@ import com.example.petapp.data.dao.*
 import com.example.petapp.data.entity.*
 
 @Database(
-    entities = [Pet::class, Vaccination::class, Mood::class, HealthSummary::class],
+    entities = [Pet::class, Vaccination::class, Mood::class, HealthSummary::class,  Meal::class],
     version = 1,
     exportSchema = false
 )
@@ -19,6 +19,7 @@ abstract class PetDatabase : RoomDatabase() {
     abstract fun vaccinationDao(): VaccinationDao
     abstract fun moodDao(): MoodDao
     abstract fun healthSummaryDao(): HealthSummaryDao
+    abstract fun mealDao(): MealDao
 
     companion object {
 
