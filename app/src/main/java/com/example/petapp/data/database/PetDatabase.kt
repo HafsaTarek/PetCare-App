@@ -14,7 +14,8 @@ import com.example.petapp.data.entity.*
 )
 abstract class PetDatabase : RoomDatabase() {
 
-    // DAOs
+    // DAOsv
+
     abstract fun petDao(): PetDao
     abstract fun vaccinationDao(): VaccinationDao
     abstract fun moodDao(): MoodDao
