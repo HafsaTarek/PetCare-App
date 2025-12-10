@@ -71,6 +71,8 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("io.coil-kt:coil-compose:2.5.1")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.6.0")

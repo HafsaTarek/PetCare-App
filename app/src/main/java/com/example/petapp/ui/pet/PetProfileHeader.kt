@@ -1,8 +1,7 @@
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -28,19 +27,11 @@ fun PetProfileHeader(pet: Pet) {
                 contentScale = ContentScale.Crop
             )
         }
+
         Spacer(modifier = Modifier.height(8.dp))
+
         Text(text = pet.name, style = MaterialTheme.typography.titleLarge)
         Text(text = "${pet.type}, ${pet.age} years old", style = MaterialTheme.typography.bodyMedium)
-        Text(text = pet.description, style = MaterialTheme.typography.bodySmall)
+        Text(text = pet.description ?: "", style = MaterialTheme.typography.bodySmall)
     }
-}
-
-@Composable
-fun AsyncImage(
-    model: String,
-    contentDescription: String,
-    modifier: Modifier,
-    contentScale: ContentScale
-) {
-    TODO("Not yet implemented")
 }

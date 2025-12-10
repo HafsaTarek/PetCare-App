@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.petapp">
 
+    <!-- Internet permission (needed for loading images with Coil) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,15 +20,14 @@
             android:label="@string/app_name" />
 
         <!-- Pet Profile (XML-based) -->
-        <activity
-            android:name=".ui.pet.PetProfileActivity"
-            android:exported="true" />
+
+        <activity android:name=".ui.pet.PetProfileActivity" />
+
 
         <!-- Add Meal (XML-based) -->
         <activity
             android:name=".ui.pet.AddMealActivity"
             android:exported="true" />
-
 
     </application>
 
