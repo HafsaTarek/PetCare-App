@@ -1,7 +1,5 @@
 package com.example.petapp.ui.pet
-
 import android.content.Intent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,21 +12,28 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.example.petapp.data.database.PetDatabase
 import com.example.petapp.data.entity.Pet
-import kotlinx.coroutines.flow.collectAsState
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun PetListScreen() {
     val context = LocalContext.current
-    val db = PetDatabase.getInstance(context)
 
-    val petsFlow = db.petDao().getAllPets()
+    // Remember database instance to avoid recreating
+    val db = remember { PetDatabase.getInstance(context) }
+
+    // Get all pets as Flow
+    val petsFlow = remember { db.petDao().getAllPets() }
     val pets by petsFlow.collectAsState(initial = emptyList())
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
 
+        // Button to add new pet
         Button(
             onClick = {
                 context.startActivity(Intent(context, AddEditPetActivity::class.java))
@@ -40,14 +45,13 @@ fun PetListScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //List of all pets
+        // LazyColumn to display pets
         LazyColumn {
             items(pets) { pet ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        //If you want to edit the pet info
                         .clickable {
                             context.startActivity(
                                 Intent(context, AddEditPetActivity::class.java).apply {
@@ -56,10 +60,14 @@ fun PetListScreen() {
                             )
                         }
                 ) {
-                    Row(modifier = Modifier.padding(8.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                    ) {
+                        // Pet image
                         if (!pet.imageUrl.isNullOrEmpty()) {
-                            Image(
-                                painter = rememberAsyncImagePainter(pet.imageUrl),
+                            AsyncImage(
+                                model = pet.imageUrl,
                                 contentDescription = "${pet.name} image",
                                 modifier = Modifier
                                     .size(60.dp)
@@ -67,10 +75,18 @@ fun PetListScreen() {
                                 contentScale = ContentScale.Crop
                             )
                         }
+
                         Spacer(modifier = Modifier.width(16.dp))
+
                         Column {
-                            Text(text = pet.name, style = MaterialTheme.typography.titleMedium)
-                            Text(text = "${pet.type}, ${pet.age} years old", style = MaterialTheme.typography.bodyMedium)
+                            Text(
+                                text = pet.name,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = "${pet.type}, ${pet.age} years old",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
                 }

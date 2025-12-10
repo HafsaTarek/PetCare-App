@@ -1,9 +1,4 @@
-//plugins {
-//    alias(libs.plugins.android.application)
-//    alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.compose)
-//    alias(libs.plugins.kotlin.kapt)
-//}
+import org.gradle.api.JavaVersion
 
 plugins {
     id("com.android.application")
@@ -14,9 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.petapp"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.petapp"
@@ -37,13 +30,16 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
     }
@@ -66,21 +62,18 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    implementation "androidx.room:room-runtime:2.6.1"
-    kapt "androidx.room:room-compiler:2.6.1"
-    implementation "androidx.room:room-ktx:2.6.1"
+    implementation("androidx.navigation:navigation-compose:2.7.0")
+    implementation("io.coil-kt:coil-compose:2.5.1")
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
-
-
-    implementation "androidx.navigation:navigation-compose:2.7.0"
-
-    testImplementation "junit:junit:4.13.2"
-    testImplementation "org.mockito:mockito-core:5.6.0"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
-    androidTestImplementation "androidx.room:room-testing:2.6.1"
-
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:5.6.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation("androidx.room:room-testing:2.6.1")
 }

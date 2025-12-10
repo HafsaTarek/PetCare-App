@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.example.petapp.data.entity.Pet
 
 @Composable
@@ -19,8 +19,8 @@ fun PetProfileHeader(pet: Pet) {
         verticalArrangement = Arrangement.Center
     ) {
         if (!pet.imageUrl.isNullOrEmpty()) {
-            Image(
-                painter = rememberAsyncImagePainter(pet.imageUrl),
+            AsyncImage(
+                model = pet.imageUrl,
                 contentDescription = "${pet.name} image",
                 modifier = Modifier
                     .size(120.dp)
@@ -33,4 +33,14 @@ fun PetProfileHeader(pet: Pet) {
         Text(text = "${pet.type}, ${pet.age} years old", style = MaterialTheme.typography.bodyMedium)
         Text(text = pet.description, style = MaterialTheme.typography.bodySmall)
     }
+}
+
+@Composable
+fun AsyncImage(
+    model: String,
+    contentDescription: String,
+    modifier: Modifier,
+    contentScale: ContentScale
+) {
+    TODO("Not yet implemented")
 }
