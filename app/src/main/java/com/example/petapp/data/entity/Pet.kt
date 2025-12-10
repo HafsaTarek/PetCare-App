@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 data class Pet(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-
     val name: String,
     val type: String,        // dog, cat
     val age: Int,
