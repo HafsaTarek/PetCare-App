@@ -1,3 +1,12 @@
+package com.example.petapp.data.entity
+
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.example.petapp.data.entity.Pet  // import your Pet entity
+
+
 @Entity(
     tableName = "health_summaries",
     foreignKeys = [ForeignKey(

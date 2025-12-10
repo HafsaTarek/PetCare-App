@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.petapp.data.entity.HealthSummary
 import kotlinx.coroutines.flow.Flow
 
+
 @Dao
 interface HealthSummaryDao {
 
