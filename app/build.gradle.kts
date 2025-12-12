@@ -5,6 +5,13 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("org.jetbrains.kotlin.plugin.compose")
+
+//    id("com.android.application")
+//    id("org.jetbrains.kotlin.android")
+
+    // Apply Google services plugin
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -54,6 +61,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.firebase.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,6 +80,14 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.0")
     implementation("io.coil-kt:coil-compose:2.5.1")
     implementation("io.coil-kt:coil-compose:2.6.0")
+    // Import Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+
+    // Add Firebase products you need, for example:
+    implementation("com.google.firebase:firebase-auth-ktx")       // Authentication
+    implementation("com.google.firebase:firebase-firestore-ktx")   // Firestore DB
+    implementation("com.google.firebase:firebase-analytics-ktx")   // Analytics
+
 
 
     testImplementation("junit:junit:4.13.2")
