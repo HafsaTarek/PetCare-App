@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class AddEditPetActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,92 +49,105 @@ class AddEditPetActivity : ComponentActivity() {
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Top
-            ) {
-                Text(
-                    text = if (petId == -1) "Add Pet" else "Edit Pet",
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Name") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = type,
-                    onValueChange = { type = it },
-                    label = { Text("Type (dog, cat...)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = age,
-                    onValueChange = { age = it },
-                    label = { Text("Age") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    label = { Text("Description") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                OutlinedTextField(
-                    value = imageUrl,
-                    onValueChange = { imageUrl = it },
-                    label = { Text("Image URL (optional)") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = {
-                        if (name.isBlank() || type.isBlank() || age.isBlank()) {
-                            Toast.makeText(this@AddEditPetActivity, "Please fill all required fields", Toast.LENGTH_SHORT).show()
-                            return@Button
-                        }
-
-                        val pet = Pet(
-                            id = if (petId != -1) petId else 0,
-                            name = name,
-                            type = type,
-                            age = age.toIntOrNull() ?: 0,
-                            description = description,
-                            imageUrl = if (imageUrl.isBlank()) null else imageUrl
-                        )
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            db.petDao().insertPet(pet)
-                            runOnUiThread {
-                                Toast.makeText(this@AddEditPetActivity, "Pet saved!", Toast.LENGTH_SHORT).show()
-                                finish()
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(text = if (petId == -1) "Add Pet" else "Edit Pet")
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { finish() }) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = "Back"
+                                )
                             }
                         }
-                    },
-                    modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            ) { paddingValues ->
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Top
                 ) {
-                    Text(text = if (petId == -1) "Add Pet" else "Save Changes")
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text("Name") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = type,
+                        onValueChange = { type = it },
+                        label = { Text("Type (dog, cat...)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = age,
+                        onValueChange = { age = it },
+                        label = { Text("Age") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Description") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = imageUrl,
+                        onValueChange = { imageUrl = it },
+                        label = { Text("Image URL (optional)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            if (name.isBlank() || type.isBlank() || age.isBlank()) {
+                                Toast.makeText(this@AddEditPetActivity, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            val pet = Pet(
+                                id = if (petId != -1) petId else 0,
+                                name = name,
+                                type = type,
+                                age = age.toIntOrNull() ?: 0,
+                                description = description,
+                                imageUrl = if (imageUrl.isBlank()) null else imageUrl
+                            )
+
+                            CoroutineScope(Dispatchers.IO).launch {
+                                db.petDao().insertPet(pet)
+                                runOnUiThread {
+                                    Toast.makeText(this@AddEditPetActivity, "Pet saved!", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = if (petId == -1) "Add Pet" else "Save Changes")
+                    }
                 }
             }
         }
