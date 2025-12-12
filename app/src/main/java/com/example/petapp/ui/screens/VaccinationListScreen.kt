@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
@@ -30,7 +31,19 @@ fun VaccinationListScreen(
     var selectedVaccination by remember { mutableStateOf<Vaccination?>(null) }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Vaccinations") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Vaccinations") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 selectedVaccination = null
@@ -66,7 +79,8 @@ fun VaccinationListScreen(
                 if (v.id == 0) viewModel.addVaccination(v)
                 else viewModel.updateVaccination(v)
                 showDialog = false
-            }
+            },
+            onBack = { showDialog = false } // <-- Back arrow closes the dialog
         )
     }
 }
