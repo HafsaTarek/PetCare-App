@@ -15,11 +15,17 @@ import com.example.petapp.data.entity.Mood
 import com.example.petapp.data.repository.MoodRepository
 import com.example.petapp.data.viewmodel.MoodViewModel
 import com.example.petapp.data.viewmodel.MoodViewModelFactory
+import java.text.SimpleDateFormat
+import java.util.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoodTrackerScreen(navController: NavController) {
-
+fun MoodTrackerScreen(
+    petId: Int,
+    onBack: () -> Unit
+) {
     // --- Initialize ViewModel ---
     val context = LocalContext.current
     val dao = PetDatabase.getInstance(context).moodDao()
@@ -27,14 +33,26 @@ fun MoodTrackerScreen(navController: NavController) {
     val factory = MoodViewModelFactory(repo)
     val viewModel: MoodViewModel = viewModel(factory = factory)
 
+    // Filter moods for this pet
     val moodList by viewModel.allMoods.collectAsState(initial = emptyList())
+    val petMoods = moodList.filter { it.petId == petId }
 
     var showDialog by remember { mutableStateOf(false) }
     var moodText by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Mood Tracker") })
+            TopAppBar(
+                title = { Text("Mood Tracker") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showDialog = true }) {
@@ -42,10 +60,13 @@ fun MoodTrackerScreen(navController: NavController) {
             }
         }
     ) { padding ->
-
-        Column(modifier = Modifier.padding(padding)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(moodList) { mood ->
+                items(petMoods) { mood ->
                     MoodItem(mood = mood, onDelete = { viewModel.deleteMood(mood) })
                 }
             }
@@ -68,7 +89,7 @@ fun MoodTrackerScreen(navController: NavController) {
                 Button(onClick = {
                     viewModel.addMood(
                         Mood(
-                            petId = 1, // TODO: replace with real pet id
+                            petId = petId,
                             mood = moodText,
                             date = System.currentTimeMillis()
                         )
@@ -90,10 +111,14 @@ fun MoodTrackerScreen(navController: NavController) {
 
 @Composable
 fun MoodItem(mood: Mood, onDelete: () -> Unit) {
+    val formattedDate = remember(mood.date) {
+        SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(Date(mood.date))
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
@@ -104,7 +129,7 @@ fun MoodItem(mood: Mood, onDelete: () -> Unit) {
         ) {
             Column {
                 Text("Mood: ${mood.mood}")
-                Text("Date: ${mood.date}")
+                Text("Date: $formattedDate")
             }
             Button(onClick = onDelete) {
                 Text("Delete")
