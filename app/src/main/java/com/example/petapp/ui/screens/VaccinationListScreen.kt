@@ -36,10 +36,7 @@ fun VaccinationListScreen(
                 title = { Text("Vaccinations") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -80,7 +77,7 @@ fun VaccinationListScreen(
                 else viewModel.updateVaccination(v)
                 showDialog = false
             },
-            onBack = { showDialog = false } // <-- Back arrow closes the dialog
+            onBack = { showDialog = false } // closes dialog
         )
     }
 }
@@ -106,18 +103,11 @@ fun VaccinationItem(
             Column {
                 Text(text = vaccination.name, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = "Date: ${
-                        SimpleDateFormat(
-                            "dd/MM/yyyy",
-                            Locale.getDefault()
-                        ).format(Date(vaccination.date))
-                    }"
+                    text = "Date: ${SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(vaccination.date))}"
                 )
                 vaccination.nextDue?.let {
                     Text(
-                        text = "Next Due: ${
-                            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
-                        }"
+                        text = "Next Due: ${SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))}"
                     )
                 }
             }
