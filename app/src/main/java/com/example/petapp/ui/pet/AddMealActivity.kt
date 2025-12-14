@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 
 class AddMealActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,4 +53,3 @@ fun AddMealScreenWrapper(petId: Int, mealId: Int?) {
         }
     }
 }
-
