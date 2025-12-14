@@ -18,27 +18,12 @@ class PetProfileActivity : ComponentActivity() {
             PetAppTheme {
                 PetProfileScreen(
                     petId = petId,
-                    onBack = { finish() }, // <-- handle back arrow
-                    onAddMealClick = {
-                        // Example: open AddMealActivity
-                        val intent = Intent(this, AddMealActivity::class.java)
-                        intent.putExtra("PET_ID", petId)
-                        startActivity(intent)
-                    },
-                    onEditMealClick = { mealId ->
-                        val intent = Intent(this, AddMealActivity::class.java)
-                        intent.putExtra("PET_ID", petId)
-                        intent.putExtra("MEAL_ID", mealId)
-                        startActivity(intent)
-                    },
-                    onMoodClick = {
-                        // Example: open MoodTrackerScreen via NavController if using Compose Navigation
-                    },
-                    onVaccinationsClick = {
-                        // Example: open VaccinationListScreen
-                    }
+                    onBack = { finish() },
+                    onMoodClick = { /* navigate to MoodTrackerActivity */ },
+                    onVaccinationsClick = { /* navigate to VaccinationListActivity */ }
                 )
             }
         }
     }
 }
+
