@@ -1,5 +1,6 @@
 package com.example.petapp.ui.pet
 
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,18 +20,18 @@ import com.example.petapp.data.entity.Pet
 fun PetProfileScreen(
     petId: Int,
     onBack: () -> Unit,
-    onAddMealClick: () -> Unit,
-    onEditMealClick: (Int) -> Unit,
     onMoodClick: () -> Unit,
     onVaccinationsClick: () -> Unit
 ) {
     val context = LocalContext.current
     val db = remember { PetDatabase.getInstance(context) }
 
+    // Load pet
     val pet by produceState<Pet?>(initialValue = null, petId) {
         value = db.petDao().getPetById(petId)
     }
 
+    // Load meals
     val meals by produceState(initialValue = emptyList<Meal>(), petId) {
         db.mealDao().getMealsForPet(petId).collect { value = it }
     }
@@ -41,10 +42,7 @@ fun PetProfileScreen(
                 title = { Text("Pet Profile") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -55,27 +53,42 @@ fun PetProfileScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-
             pet?.let { PetProfileHeader(it) }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = onAddMealClick, modifier = Modifier.fillMaxWidth()) {
+            // Add Meal button
+            Button(
+                onClick = {
+                    val intent = Intent(context, AddMealActivity::class.java)
+                    intent.putExtra("PET_ID", petId)
+                    context.startActivity(intent)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text("Add Meal")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            MealsList(meals = meals, onEditMealClick = onEditMealClick)
+            // Meals list with Edit buttons
+            MealsList(meals = meals, onEditMealClick = { mealId ->
+                val intent = Intent(context, AddMealActivity::class.java)
+                intent.putExtra("PET_ID", petId)
+                intent.putExtra("MEAL_ID", mealId)
+                context.startActivity(intent)
+            })
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Mood Tracker button
             Button(onClick = onMoodClick, modifier = Modifier.fillMaxWidth()) {
                 Text("Mood Tracker")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Vaccinations button
             Button(onClick = onVaccinationsClick, modifier = Modifier.fillMaxWidth()) {
                 Text("Vaccinations")
             }
