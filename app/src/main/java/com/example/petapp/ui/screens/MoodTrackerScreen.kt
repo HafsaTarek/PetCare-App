@@ -3,13 +3,14 @@ package com.example.petapp.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.petapp.data.database.PetDatabase
 import com.example.petapp.data.entity.Mood
 import com.example.petapp.data.repository.MoodRepository
@@ -17,8 +18,6 @@ import com.example.petapp.data.viewmodel.MoodViewModel
 import com.example.petapp.data.viewmodel.MoodViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,14 +25,12 @@ fun MoodTrackerScreen(
     petId: Int,
     onBack: () -> Unit
 ) {
-    // --- Initialize ViewModel ---
     val context = LocalContext.current
     val dao = PetDatabase.getInstance(context).moodDao()
     val repo = MoodRepository(dao)
     val factory = MoodViewModelFactory(repo)
     val viewModel: MoodViewModel = viewModel(factory = factory)
 
-    // Filter moods for this pet
     val moodList by viewModel.allMoods.collectAsState(initial = emptyList())
     val petMoods = moodList.filter { it.petId == petId }
 
@@ -46,10 +43,7 @@ fun MoodTrackerScreen(
                 title = { Text("Mood Tracker") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -87,15 +81,17 @@ fun MoodTrackerScreen(
             },
             confirmButton = {
                 Button(onClick = {
-                    viewModel.addMood(
-                        Mood(
-                            petId = petId,
-                            mood = moodText,
-                            date = System.currentTimeMillis()
+                    if (moodText.isNotBlank()) {
+                        viewModel.addMood(
+                            Mood(
+                                petId = petId,
+                                mood = moodText,
+                                date = System.currentTimeMillis()
+                            )
                         )
-                    )
-                    moodText = ""
-                    showDialog = false
+                        moodText = ""
+                        showDialog = false
+                    }
                 }) {
                     Text("Save")
                 }
