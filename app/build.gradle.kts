@@ -1,17 +1,9 @@
-import org.gradle.api.JavaVersion
-
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
+    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
-
-//    id("com.android.application")
-//    id("org.jetbrains.kotlin.android")
-
-    // Apply Google services plugin
     id("com.google.gms.google-services")
-
+    id("com.google.devtools.ksp") // REQUIRED for Room
 }
 
 android {
@@ -24,7 +16,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,12 +30,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        jvmToolchain(19)
     }
 
     buildFeatures {
@@ -53,45 +44,48 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.firebase.common.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // Compose BOM (manages most Compose libraries)
+    val composeBom = platform("androidx.compose:compose-bom:2025.12.00")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)  // fixes ui-test-junit4 and activity-compose
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    // Core AndroidX
+    implementation("androidx.core:core-ktx")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx")
+    implementation("androidx.activity:activity-compose")  // from BOM
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    // Navigation-Compose (NOT in BOM → add separately)
+    implementation("androidx.navigation:navigation-compose:2.8.4")
 
-    implementation("androidx.navigation:navigation-compose:2.7.0")
-    implementation("io.coil-kt:coil-compose:2.5.1")
-    implementation("io.coil-kt:coil-compose:2.6.0")
-    // Import Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    // Coil (latest Coil 3)
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
 
-    // Add Firebase products you need, for example:
-    implementation("com.google.firebase:firebase-auth-ktx")       // Authentication
-    implementation("com.google.firebase:firebase-firestore-ktx")   // Firestore DB
-    implementation("com.google.firebase:firebase-analytics-ktx")   // Analytics
+    // Room
+    val roomVersion = "2.8.4"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    androidTestImplementation("androidx.room:room-testing:$roomVersion")
 
+    // ViewModel & Coroutines
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android")
+    implementation ("androidx.compose.material:material-icons-extended")
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
-
+    // Testing
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.6.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    androidTestImplementation("androidx.room:room-testing:2.6.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest") // recommended for screenshots/previews
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 }
