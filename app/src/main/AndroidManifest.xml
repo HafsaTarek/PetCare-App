@@ -26,6 +26,8 @@
 
         <!-- Pet Profile -->
         <activity android:name=".ui.pet.PetProfileActivity" />
+        <activity android:name=".ui.pet.AddEditPetActivity" />
+
 
         <!-- Add Meal -->
         <activity
