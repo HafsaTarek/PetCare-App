@@ -7,21 +7,21 @@ import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.example.petapp.ui.navigation.AppNavGraph
 import com.example.petapp.ui.theme.PetAppTheme
-//import com.google.firebase.Firebase
-//
-//import com.google.firebase.ktx.Firebase
-//import com.google.firebase.auth.ktx.auth
-//
-//val auth = Firebase.auth
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ✅ MUST BE HERE
+        FirebaseApp.initializeApp(this)
+
         enableEdgeToEdge()
         setContent {
             PetAppTheme {
                 val navController = rememberNavController()
-                AppNavGraph(navController = navController)
+                AppNavGraph(navController)
             }
         }
     }
