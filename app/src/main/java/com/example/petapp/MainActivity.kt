@@ -14,7 +14,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ✅ MUST BE HERE
         FirebaseApp.initializeApp(this)
 
         enableEdgeToEdge()
